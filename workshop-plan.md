@@ -179,8 +179,8 @@ This isn't a feel-good wrap. It's a forcing function: if the hour of case work i
 ## Preparation checklist
 
 - [ ] Translate case cards and worksheets to Lithuanian
-- [ ] Print case cards — one per group (A4, one case per page), 6 cases
-- [ ] Print worksheets — one per group (A3 recommended, two task sections)
+- [ ] Print case cards from `cases.html` — one per group (A4, one case per page, 6 cases total)
+- [ ] Print worksheets from `worksheet.html` — one per group (A4, 2 pages per group: one per task)
 - [ ] Prepare sticky notes — green and red, 2 per expected participant (plan for 20–30)
 - [ ] Pre-assign groups (5–8 depending on turnout), mix tenures, teams, temperaments
 - [ ] Assign cases — 6 unique; if more groups than cases, double A or E; Case D to a trusted senior coach
