@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Coach Day — Group Worksheet</title>
+<style>
+:root {
+  --ink: #1a1a1a;
+  --ink-soft: #555;
+  --ink-mute: #888;
+  --accent: #C4452A;
+  --rule: #c8c3b8;
+  --cream: #FAF6EF;
+  --stop: #B3432A;
+  --start: #4A7C59;
+  --escalate: #B8893B;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  font-family: 'Inter', -apple-system, Helvetica, Arial, sans-serif;
+  color: var(--ink);
+  background: #eee;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  width: 210mm;
+  height: 297mm;
+  background: white;
+  padding: 12mm 12mm 10mm;
+  margin: 20px auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  position: relative;
+  page-break-after: always;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 4mm;
+  margin-bottom: 5mm;
+}
+
+.title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 20pt;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.title em { font-style: italic; color: var(--accent); font-weight: 400; }
+.subtitle {
+  font-size: 7pt;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 2mm;
+  font-weight: 500;
+}
+
+.meta-box {
+  display: flex;
+  gap: 4mm;
+}
+.meta-row {
+  display: flex;
+  align-items: baseline;
+  gap: 2mm;
+  font-size: 9pt;
+}
+.meta-row .label {
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-size: 7pt;
+  color: var(--ink-mute);
+  font-weight: 600;
+}
+.meta-row .fill {
+  border-bottom: 1px solid var(--ink);
+  width: 30mm;
+  height: 4mm;
+}
+
+/* Section */
+.section {
+  margin-bottom: 4mm;
+  display: flex;
+  flex-direction: column;
+}
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 2mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--rule);
+}
+.section-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 14pt;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.section-title em { color: var(--accent); font-style: italic; }
+.section-timing {
+  font-size: 7pt;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+}
+.section-desc {
+  font-size: 8pt;
+  color: var(--ink-soft);
+  line-height: 1.35;
+  margin-bottom: 2.5mm;
+}
+
+/* Layer grid (Task 1) */
+.layer-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 3mm;
+  flex: 1;
+}
+.layer-col {
+  border: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: 55mm 1fr;
+  flex: 1;
+}
+.layer-head {
+  background: var(--cream);
+  padding: 4mm 5mm;
+  border-right: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.layer-name {
+  font-family: 'Fraunces', serif;
+  font-size: 16pt;
+  font-weight: 500;
+}
+.layer-prompt {
+  font-size: 8.5pt;
+  color: var(--ink-soft);
+  margin-top: 2mm;
+  line-height: 1.4;
+}
+.layer-body {
+  padding: 4mm;
+}
+
+/* SSE (Task 2) */
+.sse-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 3mm;
+  flex: 1;
+}
+.sse-col {
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--rule);
+  display: grid;
+  grid-template-columns: 55mm 1fr;
+  flex: 1;
+}
+.sse-col.stop { border-left-color: var(--stop); }
+.sse-col.start { border-left-color: var(--start); flex: 1.4; }
+.sse-col.escalate { border-left-color: var(--escalate); }
+.sse-head {
+  background: var(--cream);
+  padding: 4mm 5mm;
+  border-right: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.sse-name {
+  font-family: 'Fraunces', serif;
+  font-size: 16pt;
+  font-weight: 500;
+}
+.sse-prompt {
+  font-size: 8.5pt;
+  color: var(--ink-soft);
+  margin-top: 2mm;
+  line-height: 1.4;
+}
+.sse-body {
+  padding: 4mm;
+  display: flex;
+  flex-direction: column;
+}
+.sse-body.flat { }
+.sse-subsection {
+  border-top: 1px dashed var(--rule);
+  padding-top: 2mm;
+  margin-top: auto;
+}
+.sse-sublabel {
+  font-size: 7pt;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+  margin-bottom: 1mm;
+}
+
+.conversation-box {
+  border: 1px solid var(--accent);
+  background: #FDEAE4;
+  padding: 2mm 3mm;
+  margin-bottom: 2mm;
+}
+.conversation-label {
+  font-size: 7pt;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 1mm;
+}
+.conversation-note {
+  font-size: 7.5pt;
+  color: var(--ink-soft);
+  line-height: 1.3;
+}
+
+/* Prompts helper box */
+.prompts {
+  margin-bottom: 4mm;
+  padding: 3mm 4mm;
+  background: #F4F2EC;
+  border-left: 3px solid var(--ink-mute);
+  font-size: 8pt;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+.prompts-label {
+  font-size: 7pt;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 1.5mm;
+}
+.prompts ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.prompts li {
+  padding: 0.5mm 0 0.5mm 5mm;
+  position: relative;
+}
+.prompts li::before {
+  content: '·';
+  position: absolute;
+  left: 1mm;
+  top: -1mm;
+  font-size: 12pt;
+  color: var(--accent);
+}
+
+/* Forcing function box */
+.forcing {
+  margin-top: 2mm;
+  padding: 2mm 3mm;
+  background: #FFF4E3;
+  border-left: 3px solid var(--escalate);
+  font-size: 7.5pt;
+  line-height: 1.35;
+  color: var(--ink);
+}
+.forcing-label {
+  font-size: 7pt;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--escalate);
+  margin-bottom: 1mm;
+}
+
+/* Footer */
+.footer {
+  margin-top: 3mm;
+  display: flex;
+  justify-content: space-between;
+  font-size: 7pt;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+/* Control UI (not printed) */
+.controls {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: white;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  font-size: 11px;
+  z-index: 100;
+}
+.controls button {
+  padding: 6px 12px;
+  border: 1px solid var(--ink);
+  background: white;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+}
+.controls button:hover { background: var(--ink); color: white; }
+
+@media print {
+  body { background: white; }
+  .page { margin: 0; box-shadow: none; width: 210mm; height: 297mm; }
+  .controls { display: none; }
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="controls">
+  <button onclick="window.print()">Print</button>
+</div>
+
+<!-- Page 1 — Task 1 -->
+<div class="page">
+
+  <div class="header">
+    <div>
+      <div class="title">Task 01 — <em>Peel back the layers</em>.</div>
+      <div class="subtitle">Coach Day · AI — Expectations vs. Reality · 15 min</div>
+    </div>
+    <div class="meta-box">
+      <div class="meta-row"><span class="label">Group</span><span class="fill"></span></div>
+      <div class="meta-row"><span class="label">Case</span><span class="fill"></span></div>
+    </div>
+  </div>
+
+  <div class="prompts">
+    <div class="prompts-label">How to use this sheet</div>
+    <ul>
+      <li>Start with the <strong>Surface</strong> — what's visible from the outside, what a manager notices in a status report.</li>
+      <li>Then ask <strong>"why?"</strong> at least three times. Each answer becomes the next question. Write what comes out in <strong>Underneath</strong>.</li>
+      <li>Don't stop until you reach the <strong>Core</strong> — a fear or need about a real human: identity, belonging, control, safety, meaning, status.</li>
+      <li>If the Core column still reads like a process problem, you haven't gone deep enough. Keep going.</li>
+    </ul>
+  </div>
+
+  <div class="section" style="flex:1;">
+    <div class="layer-grid" style="height:100%;">
+      <div class="layer-col">
+        <div class="layer-head">
+          <div class="layer-name">Surface</div>
+          <div class="layer-prompt">What's visible? What would a manager see from the outside — in standups, metrics, Slack, the PR queue?</div>
+        </div>
+        <div class="layer-body"></div>
+      </div>
+      <div class="layer-col">
+        <div class="layer-head">
+          <div class="layer-name">Underneath</div>
+          <div class="layer-prompt">What's driving it? Which systems, incentives, norms, or histories produced this surface? What would stop if those went away?</div>
+        </div>
+        <div class="layer-body"></div>
+      </div>
+      <div class="layer-col">
+        <div class="layer-head">
+          <div class="layer-name">Core</div>
+          <div class="layer-prompt">What is this person actually afraid of losing, or needing to protect? Name it in human terms — one sentence.</div>
+        </div>
+        <div class="layer-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="forcing">
+    <div class="forcing-label">Forcing function</div>
+    If the Core column still reads like a process problem ("reviews are slow", "no feedback loop"), you haven't gone deep enough. The core is always about a person: identity, safety, meaning, belonging, status, control.
+  </div>
+
+  <div class="footer">
+    <span>Page 1 of 2 · Coach Day · 2026</span>
+    <span>Visma Tech Lithuania</span>
+  </div>
+</div>
+
+<!-- Page 2 — Task 2 -->
+<div class="page">
+
+  <div class="header">
+    <div>
+      <div class="title">Task 02 — <em>Stop. Start. Escalate</em>.</div>
+      <div class="subtitle">Coach Day · AI — Expectations vs. Reality · 30 min</div>
+    </div>
+    <div class="meta-box">
+      <div class="meta-row"><span class="label">Group</span><span class="fill"></span></div>
+      <div class="meta-row"><span class="label">Case</span><span class="fill"></span></div>
+    </div>
+  </div>
+
+  <div class="prompts">
+    <div class="prompts-label">How to use this sheet</div>
+    <ul>
+      <li><strong>5 min</strong> — draft Stop items and candidate Escalate items together (quick bullets).</li>
+      <li><strong>10 min</strong> — brainstorm Start action points: practices, rituals, guardrails, experiments, pilots. Get several on paper.</li>
+      <li><strong>5 min silent</strong> — each person writes their own opening lines to the person in the case. Full sentences, your own words.</li>
+      <li><strong>8 min</strong> — read versions aloud, merge the strongest one into the Start column. Then write what you'd NOT say below it.</li>
+      <li><strong>2 min</strong> — lock one Escalate item with a specific name and date.</li>
+    </ul>
+  </div>
+
+  <div class="section" style="flex:1;">
+    <div class="sse-grid" style="height:100%;">
+      <!-- STOP -->
+      <div class="sse-col stop">
+        <div class="sse-head">
+          <div class="sse-name">Stop</div>
+          <div class="sse-prompt">What are we currently doing that makes this problem worse? Think: habits, rituals, defaults, unspoken rules, review practices, language we use.</div>
+        </div>
+        <div class="sse-body"></div>
+      </div>
+
+      <!-- START -->
+      <div class="sse-col start">
+        <div class="sse-head">
+          <div class="sse-name">Start</div>
+          <div class="sse-prompt">New action points: a practice, ritual, guardrail, small experiment, working agreement, visible change in what gets praised. <strong>One action must be the actual opening of the conversation you'd have on Monday</strong> — full sentences, your own words.</div>
+        </div>
+        <div class="sse-body"></div>
+      </div>
+
+      <!-- ESCALATE -->
+      <div class="sse-col escalate">
+        <div class="sse-head">
+          <div class="sse-name">Escalate</div>
+          <div class="sse-prompt">What can't we fix at the coach level? Name the specific person with the authority to decide, what we're asking them, and when we need it.</div>
+        </div>
+        <div class="sse-body flat">
+          <div class="sse-sublabel" style="margin-top:0;">The ask (what we need them to do)</div>
+          <div style="border-bottom: 1px solid var(--ink); height: 7mm; margin-bottom: 2mm;"></div>
+          <div style="border-bottom: 1px solid var(--ink); height: 7mm; margin-bottom: 2mm;"></div>
+          <div style="border-bottom: 1px solid var(--ink); height: 7mm; margin-bottom: 4mm;"></div>
+          <div class="sse-sublabel">Who (name + role)</div>
+          <div style="border-bottom: 1px solid var(--ink); height: 7mm; margin-bottom: 4mm;"></div>
+          <div class="sse-sublabel">By when (date)</div>
+          <div style="border-bottom: 1px solid var(--ink); height: 7mm;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="forcing">
+    <div class="forcing-label">Forcing functions</div>
+    <strong>The conversation must only make sense for THIS case.</strong> If it would work for any other case, it's too generic — go back and make it specific. <strong>"Escalate" needs a name and a date.</strong> Not "leadership should communicate better" — "we bring this to [name] by [date]."
+  </div>
+
+  <div class="footer">
+    <span>Page 2 of 2 · Coach Day · 2026</span>
+    <span>Visma Tech Lithuania</span>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coach Day — AI: Expectations vs. Reality</title>
+<style>
+:root {
+  --bg: #FAF6EF;
+  --bg-alt: #F2EDE2;
+  --ink: #1F1D1B;
+  --ink-soft: #5A5550;
+  --ink-mute: #8B857E;
+  --accent: #C4452A;
+  --accent-soft: #E8A593;
+  --forest: #2D4A3E;
+  --gold: #B8893B;
+  --rule: #D4CFC5;
+  --green: #4A7C59;
+  --red: #B3432A;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+.deck {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  padding: 6vh 8vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.slide.prev {
+  transform: translateX(-40px);
+}
+
+/* Header meta */
+.meta {
+  position: fixed;
+  top: 24px;
+  left: 32px;
+  right: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  z-index: 10;
+  font-weight: 500;
+}
+.meta .logo {
+  height: 56px;
+  width: auto;
+  opacity: 1;
+}
+
+.progress {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: var(--accent);
+  transition: width 0.45s ease;
+  z-index: 10;
+}
+
+.counter {
+  position: fixed;
+  bottom: 20px;
+  right: 32px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--ink-mute);
+  font-variant-numeric: tabular-nums;
+  z-index: 10;
+  font-weight: 500;
+}
+
+.nav-hint {
+  position: fixed;
+  bottom: 20px;
+  left: 32px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--ink-mute);
+  z-index: 10;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Typography */
+h1 {
+  font-family: 'Fraunces', 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: clamp(48px, 7vw, 112px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+h1 em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 400;
+}
+h2 {
+  font-family: 'Fraunces', 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: clamp(36px, 5vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.4em;
+}
+h2 em { font-style: italic; color: var(--accent); }
+
+h3 {
+  font-family: 'Fraunces', 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: clamp(26px, 3.2vw, 44px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.5em;
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 1.5em;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.eyebrow::after {
+  content: '';
+  flex: 1;
+  max-width: 120px;
+  height: 1px;
+  background: var(--rule);
+}
+
+p.lead {
+  font-size: clamp(18px, 1.8vw, 26px);
+  line-height: 1.45;
+  color: var(--ink-soft);
+  max-width: 60ch;
+  margin-top: 1.2em;
+}
+
+p.body {
+  font-size: clamp(16px, 1.3vw, 20px);
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 65ch;
+}
+
+.kicker {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: clamp(20px, 1.8vw, 28px);
+  color: var(--ink-mute);
+  margin-bottom: 1em;
+}
+
+/* Title slide */
+.title-slide {
+  padding-left: 10vw;
+}
+.title-slide .subtitle {
+  font-size: clamp(16px, 1.4vw, 22px);
+  color: var(--ink-soft);
+  margin-top: 2.5em;
+  max-width: 50ch;
+  line-height: 1.5;
+}
+.title-slide .footer-meta {
+  position: absolute;
+  bottom: 10vh;
+  left: 10vw;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  gap: 40px;
+}
+
+/* Agenda */
+.agenda-list {
+  list-style: none;
+  counter-reset: agenda;
+  margin-top: 2em;
+  max-width: 800px;
+}
+.agenda-list li {
+  counter-increment: agenda;
+  padding: 20px 0;
+  border-top: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: 60px 1fr auto;
+  gap: 30px;
+  align-items: baseline;
+}
+.agenda-list li:last-child { border-bottom: 1px solid var(--rule); }
+.agenda-list li::before {
+  content: counter(agenda, decimal-leading-zero);
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  color: var(--accent);
+  font-weight: 500;
+}
+.agenda-list .agenda-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(22px, 2.2vw, 32px);
+  font-weight: 400;
+  color: var(--ink);
+}
+.agenda-list .agenda-time {
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+
+/* Survey stats */
+.stat-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 60px;
+  align-items: center;
+  margin-top: 2em;
+}
+.big-number {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(120px, 18vw, 280px);
+  line-height: 0.85;
+  font-weight: 400;
+  color: var(--accent);
+  letter-spacing: -0.04em;
+}
+.big-number .sep {
+  color: var(--rule);
+  font-weight: 300;
+}
+.big-number .denom {
+  color: var(--ink-mute);
+  font-size: 0.5em;
+}
+
+/* Theme slides */
+.theme-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  width: 100%;
+}
+.theme-count {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(80px, 10vw, 160px);
+  line-height: 0.9;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+}
+.theme-count .of {
+  color: var(--ink-mute);
+  font-size: 0.45em;
+  font-style: italic;
+}
+.theme-count .label {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 16px;
+  font-weight: 500;
+}
+.quote {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: clamp(22px, 2vw, 32px);
+  line-height: 1.35;
+  color: var(--ink);
+  border-left: 3px solid var(--accent);
+  padding-left: 28px;
+  margin: 1.5em 0;
+  max-width: 50ch;
+}
+.quote .attr {
+  display: block;
+  font-style: normal;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 16px;
+  font-weight: 500;
+}
+
+/* Tension slides */
+.tension-layout {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  gap: 40px;
+  align-items: stretch;
+  margin-top: 2em;
+  min-height: 40vh;
+}
+.tension-col {
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 4px;
+}
+.tension-exp {
+  background: var(--bg-alt);
+  border: 1px solid var(--rule);
+}
+.tension-reality {
+  background: #FDEAE4;
+  border: 1px solid var(--accent-soft);
+}
+.tension-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-size: 48px;
+  color: var(--accent);
+}
+.tension-label {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.tension-exp .tension-label { color: var(--ink-mute); }
+.tension-reality .tension-label { color: var(--accent); }
+.tension-text {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(22px, 2vw, 32px);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.tension-sub {
+  margin-top: 16px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+/* Phase markers */
+.phase-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.phase-num {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(140px, 22vw, 340px);
+  line-height: 0.85;
+  font-weight: 400;
+  color: var(--accent);
+  letter-spacing: -0.04em;
+}
+.phase-kicker {
+  font-size: 13px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+/* Case slides */
+.case-layout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 60px;
+  align-items: start;
+  margin-top: 1em;
+}
+.case-letter {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(140px, 18vw, 260px);
+  line-height: 0.85;
+  color: var(--accent);
+  letter-spacing: -0.04em;
+}
+.case-content {
+  max-width: 64ch;
+  padding-top: 20px;
+}
+.case-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(28px, 3vw, 42px);
+  line-height: 1.1;
+  margin-bottom: 0.6em;
+  letter-spacing: -0.01em;
+}
+.case-body {
+  font-size: clamp(15px, 1.25vw, 18px);
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.case-beats {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.case-beats li {
+  font-size: clamp(15px, 1.25vw, 19px);
+  line-height: 1.45;
+  color: var(--ink-soft);
+  padding-left: 22px;
+  position: relative;
+}
+.case-beats li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 10px;
+  height: 1px;
+  background: var(--accent);
+}
+.case-quote {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: clamp(18px, 1.6vw, 24px);
+  line-height: 1.35;
+  color: var(--ink);
+  border-left: 3px solid var(--accent);
+  padding-left: 20px;
+  margin: 20px 0 4px;
+  max-width: 55ch;
+}
+.case-themes {
+  margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.theme-tag {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 20px;
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+
+/* Sticky note slide */
+.sticky-wall {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 2em;
+}
+.sticky {
+  padding: 32px;
+  min-height: 180px;
+  font-family: 'Fraunces', serif;
+  font-size: clamp(22px, 2vw, 30px);
+  line-height: 1.25;
+  transform: rotate(-1.5deg);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  position: relative;
+}
+.sticky.green {
+  background: #D4E4D0;
+  transform: rotate(1.5deg);
+}
+.sticky.red {
+  background: #F5C7BD;
+}
+.sticky .sticky-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 20px;
+  display: block;
+}
+
+/* Task slides */
+.task-steps {
+  counter-reset: step;
+  margin-top: 2em;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 900px;
+}
+.task-step {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  gap: 24px;
+  padding: 20px 0;
+  border-top: 1px solid var(--rule);
+}
+.task-step:last-child { border-bottom: 1px solid var(--rule); }
+.task-step::before {
+  content: counter(step);
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  color: var(--accent);
+  line-height: 1;
+}
+.task-step-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(20px, 1.8vw, 26px);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.task-step-body {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.pin {
+  margin-top: 2em;
+  padding: 20px 24px;
+  background: var(--bg-alt);
+  border-left: 3px solid var(--gold);
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: clamp(16px, 1.4vw, 20px);
+  line-height: 1.4;
+  color: var(--ink);
+  max-width: 70ch;
+}
+.pin .pin-label {
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* Stop/Start/Escalate */
+.sse-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 2em;
+}
+.sse-col {
+  padding: 28px;
+  border-radius: 4px;
+  background: var(--bg-alt);
+  border-top: 4px solid var(--rule);
+}
+.sse-col.stop { border-top-color: var(--red); }
+.sse-col.start { border-top-color: var(--green); }
+.sse-col.escalate { border-top-color: var(--gold); }
+.sse-label {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(22px, 2.2vw, 32px);
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+.sse-body {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+/* Break slide */
+.break-slide {
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+.break-slide h1 {
+  font-size: clamp(80px, 14vw, 220px);
+  color: var(--accent);
+}
+.break-slide .break-sub {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: clamp(20px, 2vw, 32px);
+  color: var(--ink-soft);
+  margin-top: 20px;
+}
+
+/* Closing */
+.closing-quote {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  max-width: 22ch;
+}
+.closing-quote em { color: var(--accent); font-style: italic; }
+
+.signoff {
+  margin-top: 3em;
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+
+/* Utility */
+.row { display: flex; gap: 40px; align-items: center; }
+.grow { flex: 1; }
+.muted { color: var(--ink-mute); }
+.rule { height: 1px; background: var(--rule); width: 80px; margin: 24px 0; }
+
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="meta">
+  <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/7/77/Visma_logo.png" alt="Visma">
+  <span>Coach Day · 2026 · AI — Expectations vs. Reality</span>
+</div>
+
+<div class="nav-hint">← → to navigate</div>
+<div class="counter" id="counter">01 / 30</div>
+<div class="progress" id="progress" style="width:3.3%"></div>
+
+<div class="deck" id="deck">
+
+  <!-- 1. Title -->
+  <section class="slide active title-slide">
+    <div class="eyebrow">Visma Tech Lithuania · Coach Day</div>
+    <h1>AI:<br><em>Expectations</em><br>vs. <em>Reality</em>.</h1>
+    <p class="subtitle">A working session for coaches on what AI is actually doing to our teams — the good, the broken, and the conversations we've been avoiding.</p>
+    <div class="footer-meta">
+      <span>~2h 30min</span>
+      <span>Groups of 3–4</span>
+      <span>6 cases</span>
+    </div>
+  </section>
+
+  <!-- 2. Agenda -->
+  <section class="slide">
+    <div class="eyebrow">Run of show</div>
+    <h2>What we'll do <em>today</em>.</h2>
+    <ol class="agenda-list">
+      <li><span class="agenda-title">Everyone's voice on the wall</span><span class="agenda-time">15 min</span></li>
+      <li><span class="agenda-title">Survey themes + tensions</span><span class="agenda-time">15 min</span></li>
+      <li><span class="agenda-title">Break</span><span class="agenda-time">10 min</span></li>
+      <li><span class="agenda-title">Case work in groups</span><span class="agenda-time">50 min</span></li>
+      <li><span class="agenda-title">Presentations, back to green, closing</span><span class="agenda-time">50 min</span></li>
+    </ol>
+  </section>
+
+  <!-- Phase 1 marker -->
+  <section class="slide">
+    <div class="phase-marker">
+      <div class="phase-kicker">Phase 01 · 15 min</div>
+      <div class="phase-num">01</div>
+      <h2 style="margin-top:0.3em;">Everyone's voice<br>on the <em>wall</em>.</h2>
+      <p class="lead">Before anyone hears about the survey, the whole room speaks. Otherwise half of you are spectators in a workshop framed by someone else's answers.</p>
+    </div>
+  </section>
+
+  <!-- Sticky exercise -->
+  <section class="slide">
+    <div class="eyebrow">Your turn · 15 min</div>
+    <h2>Two sticky notes. No discussion.</h2>
+    <div class="sticky-wall">
+      <div class="sticky green">
+        <span class="sticky-label">Green</span>
+        One thing that genuinely got <strong>better</strong> with AI in your team.
+      </div>
+      <div class="sticky red">
+        <span class="sticky-label">Red</span>
+        One thing that got <strong>harder</strong>, broke, or worries you.
+      </div>
+    </div>
+    <p class="body" style="margin-top:2em;">Write, walk to the wall, stick. Don't explain. Don't cluster — the room will see its own patterns.</p>
+  </section>
+
+  <!-- Survey intro -->
+  <section class="slide">
+    <div class="eyebrow">What the survey said</div>
+    <div class="stat-grid">
+      <div class="big-number">9</div>
+      <div>
+        <h3>coaches also answered in advance.</h3>
+        <p class="body">Four open questions. Honest answers. Their patterns and yours on the wall tell the same story from two angles — here's what came back from the survey.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Theme 1 - Code review crisis -->
+  <section class="slide">
+    <div class="eyebrow">Theme 01 · Code review crisis</div>
+    <div class="theme-layout">
+      <div>
+        <div class="theme-count">7<span class="of">/9</span><span class="label">respondents</span></div>
+      </div>
+      <div>
+        <h3>The senior became a <em style="color:var(--accent);font-style:italic;">proofreader</em>.</h3>
+        <p class="body">AI generates huge PRs — 100+ files. Review takes hours. Quality is uncertain. The fun of coding went to the machine; humans got the leftovers.</p>
+        <div class="quote">"I used to build things. Now I check if a machine built them correctly."<span class="attr">Paraphrased from survey</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Theme 2 - Bottleneck migration -->
+  <section class="slide">
+    <div class="eyebrow">Theme 02 · Bottleneck migration</div>
+    <div class="theme-layout">
+      <div>
+        <div class="theme-count">5<span class="of">/9</span><span class="label">respondents</span></div>
+      </div>
+      <div>
+        <h3>Coding got fast. Nothing else <em>did</em>.</h3>
+        <p class="body">Requirements gathering, testing, release — untouched. Teams finish code faster but don't ship more. QA is drowning. The bottleneck didn't disappear; it moved.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Theme 3 - Motivation -->
+  <section class="slide">
+    <div class="eyebrow">Theme 03 · Existential motivation crisis</div>
+    <div class="theme-layout">
+      <div>
+        <div class="theme-count">5<span class="of">/9</span><span class="label">respondents</span></div>
+      </div>
+      <div>
+        <h3>"What's the <em>point</em> of me?"</h3>
+        <p class="body">Developers losing meaning. Backlogs emptying. Some considering leaving. The range is wide — total AI refusal on one end, thriving on the other. Most are somewhere uncertain in between.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Theme 4 - Pushback -->
+  <section class="slide">
+    <div class="eyebrow">Theme 04 · Pushback against pressure</div>
+    <div class="theme-layout">
+      <div>
+        <div class="theme-count">5<span class="of">/9</span><span class="label">respondents</span></div>
+      </div>
+      <div>
+        <h3>"Why are we being <em>forced</em>?"</h3>
+        <p class="body">Unclear why Visma Tech is pushing AI so hard. Is it to be first? Because the CTO said so? To avoid layoffs? Silence breeds worst-case assumptions.</p>
+        <div class="quote">"I'd respect any answer. I just want the real one."<span class="attr">Paraphrased from survey</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Theme 5 - AI programmers -->
+  <section class="slide">
+    <div class="eyebrow">Theme 05 · "AI programmers" conflict</div>
+    <div class="theme-layout">
+      <div>
+        <div class="theme-count">4<span class="of">/9</span><span class="label">respondents</span></div>
+      </div>
+      <div>
+        <h3>POs and analysts <em>became developers</em>.</h3>
+        <p class="body">Non-technical roles using AI to make technical decisions — bypassing architecture, security, and the people responsible for them. A new power struggle, poorly acknowledged.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. Theme 6 - Cognitive overload -->
+  <section class="slide">
+    <div class="eyebrow">Theme 06 · Cognitive overload</div>
+    <div class="theme-layout">
+      <div>
+        <div class="theme-count">3<span class="of">/9</span><span class="label">respondents</span></div>
+      </div>
+      <div>
+        <h3>One agent is already <em>a lot</em>.</h3>
+        <p class="body">Even managing a single AI agent stretches human capacity. Multiple agents overwhelm. Our brains weren't built to track this much parallel output this fast.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phase 2 marker -->
+  <section class="slide">
+    <div class="phase-marker">
+      <div class="phase-kicker">Phase 02 · 15 min</div>
+      <div class="phase-num">02</div>
+      <h2 style="margin-top:0.3em;">Four <em>tensions</em>.</h2>
+      <p class="lead">Not quotes. Not attribution. The shape of what the survey and the wall are telling us — put in words we can argue with.</p>
+    </div>
+  </section>
+
+  <!-- 13. Tension 1 -->
+  <section class="slide">
+    <div class="eyebrow">Tension 01</div>
+    <h3>Speed.</h3>
+    <div class="tension-layout">
+      <div class="tension-col tension-exp">
+        <div class="tension-label">Expectation</div>
+        <div class="tension-text">AI makes us faster.</div>
+      </div>
+      <div class="tension-arrow">→</div>
+      <div class="tension-col tension-reality">
+        <div class="tension-label">Reality</div>
+        <div class="tension-text">The bottleneck moved, not disappeared.</div>
+        <div class="tension-sub">Coding got fast. Requirements, testing, and release didn't keep up.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14. Tension 2 -->
+  <section class="slide">
+    <div class="eyebrow">Tension 02</div>
+    <h3>The "why".</h3>
+    <div class="tension-layout">
+      <div class="tension-col tension-exp">
+        <div class="tension-label">Expectation</div>
+        <div class="tension-text">Everyone should use AI.</div>
+      </div>
+      <div class="tension-arrow">→</div>
+      <div class="tension-col tension-reality">
+        <div class="tension-label">Reality</div>
+        <div class="tension-text">Nobody explained why, and pressure feels coercive.</div>
+        <div class="tension-sub">"Is this for us — or for Visma's image?"</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15. Tension 3 -->
+  <section class="slide">
+    <div class="eyebrow">Tension 03</div>
+    <h3>Who builds.</h3>
+    <div class="tension-layout">
+      <div class="tension-col tension-exp">
+        <div class="tension-label">Expectation</div>
+        <div class="tension-text">AI democratizes building.</div>
+      </div>
+      <div class="tension-arrow">→</div>
+      <div class="tension-col tension-reality">
+        <div class="tension-label">Reality</div>
+        <div class="tension-text">Non-developers making technical decisions creates new conflicts.</div>
+        <div class="tension-sub">POs and managers "became programmers" overnight.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16. Tension 4 -->
+  <section class="slide">
+    <div class="eyebrow">Tension 04</div>
+    <h3>Meaning.</h3>
+    <div class="tension-layout">
+      <div class="tension-col tension-exp">
+        <div class="tension-label">Expectation</div>
+        <div class="tension-text">Developers adapt.</div>
+      </div>
+      <div class="tension-arrow">→</div>
+      <div class="tension-col tension-reality">
+        <div class="tension-label">Reality</div>
+        <div class="tension-text">The meaning and joy of the work is under threat.</div>
+        <div class="tension-sub">Some people are quietly updating CVs.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Break -->
+  <section class="slide break-slide">
+    <div class="eyebrow" style="justify-content:center;">Pause</div>
+    <h1>Break.</h1>
+    <div class="break-sub">10 minutes. Coffee. Bathroom. Breathe before the hard part.</div>
+  </section>
+
+  <!-- 19. Phase 3 marker -->
+  <section class="slide">
+    <div class="phase-marker">
+      <div class="phase-kicker">Phase 03 · 50 min</div>
+      <div class="phase-num">03</div>
+      <h2 style="margin-top:0.3em;">Case work<br>in <em>groups</em>.</h2>
+      <p class="lead">Cases instead of abstract topics. You can't be vague about a situation with a person in it. Each group gets one case — no choosing.</p>
+    </div>
+  </section>
+
+  <!-- Case A -->
+  <section class="slide">
+    <div class="eyebrow">Case A</div>
+    <div class="case-layout">
+      <div class="case-letter">A</div>
+      <div class="case-content">
+        <div class="case-title">The senior who became a proofreader.</div>
+        <ul class="case-beats">
+          <li>A senior developer stopped writing code.</li>
+          <li>Their days are spent reviewing AI-generated PRs — often 100+ files each.</li>
+          <li>A mid-level on the same team is thriving — shipping fast, running agents.</li>
+          <li>The senior is quietly updating their CV.</li>
+        </ul>
+        <div class="case-quote">"I used to build things. Now I check if a machine built them correctly. I could be anyone."</div>
+        <div class="case-themes">
+          <span class="theme-tag">Review overload</span>
+          <span class="theme-tag">Motivation</span>
+          <span class="theme-tag">Team asymmetry</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 22. Case B -->
+  <section class="slide">
+    <div class="eyebrow">Case B</div>
+    <div class="case-layout">
+      <div class="case-letter">B</div>
+      <div class="case-content">
+        <div class="case-title">The PO who became a developer.</div>
+        <ul class="case-beats">
+          <li>The Product Owner built a working prototype over the weekend with AI.</li>
+          <li>Monday: 2,000 lines of generated code, submitted as a PR to the main repo. "Just review and merge it — it works."</li>
+          <li>The tech lead pushed back on architecture and security.</li>
+          <li>The PO escalated to their manager. Both sides are looking at you.</li>
+        </ul>
+        <div class="case-quote">"The development team is blocking innovation and slowing us down."</div>
+        <div class="case-themes">
+          <span class="theme-tag">Role boundaries</span>
+          <span class="theme-tag">Architecture bypass</span>
+          <span class="theme-tag">Power dynamics</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 23. Case C -->
+  <section class="slide">
+    <div class="eyebrow">Case C</div>
+    <div class="case-layout">
+      <div class="case-letter">C</div>
+      <div class="case-content">
+        <div class="case-title">The team that ran out of work.</div>
+        <ul class="case-beats">
+          <li>Throughput tripled. A 6-month backlog is nearly empty at month 2.</li>
+          <li>The partner is delighted but hasn't prepared more requirements.</li>
+          <li>Two people asked you privately: <em>"Will they still need all of us?"</em> You don't have an honest answer.</li>
+          <li>A third stopped using AI entirely — "why would I help make myself redundant faster?"</li>
+        </ul>
+        <div class="case-themes">
+          <span class="theme-tag">Bottleneck shift</span>
+          <span class="theme-tag">Existential fear</span>
+          <span class="theme-tag">Self-sabotage</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 24. Case D -->
+  <section class="slide">
+    <div class="eyebrow">Case D</div>
+    <div class="case-layout">
+      <div class="case-letter">D</div>
+      <div class="case-content">
+        <div class="case-title">The silent room.</div>
+        <ul class="case-beats">
+          <li>In a retrospective, a developer says out loud what many have been thinking: nobody has explained <em>why</em> the team is being pushed to adopt AI.</li>
+          <li>They ask directly: is this about impressing Visma? About headcount cuts? They say they'd respect any honest answer.</li>
+          <li>The room goes silent. Everyone turns to you — the coach.</li>
+          <li>You can't pass this one up the chain in the moment. You also don't actually know the real "why" yourself.</li>
+        </ul>
+        <div class="case-quote">"I'd respect any answer — I just want the real one."</div>
+        <div class="case-themes">
+          <span class="theme-tag">Missing "why"</span>
+          <span class="theme-tag">Leadership gap</span>
+          <span class="theme-tag">Coach's uncertainty</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 25. Case E -->
+  <section class="slide">
+    <div class="eyebrow">Case E</div>
+    <div class="case-layout">
+      <div class="case-letter">E</div>
+      <div class="case-content">
+        <div class="case-title">The bug that slipped through.</div>
+        <ul class="case-beats">
+          <li>Dev throughput doubled. QA capacity didn't.</li>
+          <li>A client found a security vulnerability in AI-generated code that passed review.</li>
+          <li>The reviewer admitted they didn't fully understand that section — but "it looked clean."</li>
+          <li>Team lead wants to slow down. The partner wants to speed up. Trust is shaken on both sides.</li>
+        </ul>
+        <div class="case-quote">"We're not actually going faster. We're finding out about problems later."</div>
+        <div class="case-themes">
+          <span class="theme-tag">Quality vs speed</span>
+          <span class="theme-tag">False confidence</span>
+          <span class="theme-tag">Trust erosion</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 26. Case F -->
+  <section class="slide">
+    <div class="eyebrow">Case F</div>
+    <div class="case-layout">
+      <div class="case-letter">F</div>
+      <div class="case-content">
+        <div class="case-title">The success stories that won't stop.</div>
+        <ul class="case-beats">
+          <li>Your team is doing fine. Delivery is steady, quality is holding, people are learning AI tools at a healthy pace.</li>
+          <li>But managers — yours and the partner's — keep hearing polished AI success stories: internal demos, LinkedIn posts, conference talks, "team X shipped in a weekend."</li>
+          <li>Every week you get the same question, in new words: <em>"Why aren't we building like that?"</em></li>
+          <li>You know most of those stories are survivorship-biased, cherry-picked, or quietly unfinished. But that's a hard argument to win against a highlight reel.</li>
+          <li>Your team is starting to feel the pressure. Some are cutting corners to "look faster." Others are disengaging.</li>
+        </ul>
+        <div class="case-themes">
+          <span class="theme-tag">Benchmark pressure</span>
+          <span class="theme-tag">Survivorship bias</span>
+          <span class="theme-tag">Protecting the team</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Group setup (after all cases shown) -->
+  <section class="slide">
+    <div class="eyebrow">Before you start</div>
+    <h2>Five minutes of <em>silence</em>.</h2>
+    <p class="lead">Read your case alone before anyone talks. The loudest voice in the group shouldn't anchor the diagnosis. Then — two tasks.</p>
+    <div class="pin">
+      <span class="pin-label">Pick a writer</span>
+      One person fills in the worksheet as the group works — not at the end. The worksheet is the artifact; leadership will read it. Make it legible.
+    </div>
+    <div class="pin" style="margin-top:1em;border-left-color:var(--accent);">
+      <span class="pin-label" style="color:var(--accent);">Case D — one thing before we start</span>
+      Case D is about leadership not explaining the "why." I am leadership. If your group gets that case, speak freely. I'd rather hear it here than not hear it at all.
+    </div>
+  </section>
+
+  <!-- Task 1 -->
+  <section class="slide">
+    <div class="eyebrow">Task 01 · 15 min</div>
+    <h2>Peel back the <em>layers</em>.</h2>
+    <p class="lead">Use "why?" at least three times. Don't stop at the first answer.</p>
+    <div class="task-steps">
+      <div class="task-step">
+        <div>
+          <div class="task-step-title">Surface</div>
+          <div class="task-step-body">What's visible? What would a manager see from the outside?</div>
+        </div>
+      </div>
+      <div class="task-step">
+        <div>
+          <div class="task-step-title">Underneath</div>
+          <div class="task-step-body">What's driving it? What systemic or organizational factors created this?</div>
+        </div>
+      </div>
+      <div class="task-step">
+        <div>
+          <div class="task-step-title">Core</div>
+          <div class="task-step-body">What's the real fear or need? What is this person actually afraid of losing?</div>
+        </div>
+      </div>
+    </div>
+    <div class="pin">
+      <span class="pin-label">Forcing function</span>
+      If you're writing process problems in the "core" column, you haven't gone deep enough. The core is always about people — identity, safety, meaning, control.
+    </div>
+  </section>
+
+  <!-- Task 2 (combined) -->
+  <section class="slide">
+    <div class="eyebrow">Task 02 · 30 min</div>
+    <h2>Stop. Start. <em>Escalate</em>.</h2>
+    <p class="lead">What changes — in behavior, in structure, and in the actual words you'd say on Monday.</p>
+    <div class="sse-grid">
+      <div class="sse-col stop">
+        <div class="sse-label">Stop</div>
+        <div class="sse-body">What are we currently doing that makes this problem worse?</div>
+      </div>
+      <div class="sse-col start">
+        <div class="sse-label">Start</div>
+        <div class="sse-body">What should we begin doing? Action points — practices, rituals, guardrails, experiments. <strong>One of these must be the actual conversation</strong> you'd have with the person in the case: full sentences, your own words, plus what you would NOT say.</div>
+      </div>
+      <div class="sse-col escalate">
+        <div class="sse-label">Escalate</div>
+        <div class="sse-body">What can't we fix at the coach level? Who specifically needs to act — and by when?</div>
+      </div>
+    </div>
+    <div class="pin">
+      <span class="pin-label">Forcing functions</span>
+      The conversation must only make sense for THIS case — if it works for any case, it's too generic. "Escalate" needs a name and a date — not "leadership should communicate better," but "we bring this to [name] by [date]."
+    </div>
+  </section>
+
+  <!-- 30. Phase 4 marker -->
+  <section class="slide">
+    <div class="phase-marker">
+      <div class="phase-kicker">Phase 04 · 50 min</div>
+      <div class="phase-num">04</div>
+      <h2 style="margin-top:0.3em;">Present.<br>Come back to <em>green</em>.<br>Follow through.</h2>
+      <p class="lead">Each group shares only three things. Task 1 stays on the worksheet — it was work done for the group, not the room.</p>
+    </div>
+  </section>
+
+  <!-- 31. What to present -->
+  <section class="slide">
+    <div class="eyebrow">Presentation format · ~5 min per group</div>
+    <h2>Three things. That's it.</h2>
+    <div class="task-steps">
+      <div class="task-step">
+        <div>
+          <div class="task-step-title">The core — one sentence</div>
+          <div class="task-step-body">What is the person in this case actually afraid of losing?</div>
+        </div>
+      </div>
+      <div class="task-step">
+        <div>
+          <div class="task-step-title">Start — read the actual words aloud</div>
+          <div class="task-step-body">The opening of the conversation you'd have on Monday.</div>
+        </div>
+      </div>
+      <div class="task-step">
+        <div>
+          <div class="task-step-title">One Escalate item</div>
+          <div class="task-step-body">With a name and a date.</div>
+        </div>
+      </div>
+    </div>
+    <div class="pin">
+      <span class="pin-label">After each group</span>
+      1–2 minutes open floor — reactions, challenges, additions. Two groups on the same case present back-to-back so the contrast is visible.
+    </div>
+  </section>
+
+  <!-- Back to the green wall -->
+  <section class="slide">
+    <div class="eyebrow">Before we close · 10 min</div>
+    <h2>Back to the <em>green</em>.</h2>
+    <p class="lead">We spent an hour on the hard parts. Now walk back to the sticky wall. Read the green notes. What's actually working? What should we keep doing — and spread?</p>
+    <div class="sticky-wall" style="margin-top:1.5em;">
+      <div class="sticky green" style="transform:rotate(-2deg);">
+        <span class="sticky-label">Green</span>
+        The things that got better. Name them out loud. Name who made them better.
+      </div>
+      <div class="sticky green" style="transform:rotate(1.5deg);background:#CFE0CA;">
+        <span class="sticky-label">Green</span>
+        Pick one to steal. Which green note — not yours — are you taking back to your team?
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const counter = document.getElementById('counter');
+const progress = document.getElementById('progress');
+let current = 0;
+const total = slides.length;
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function show(index, { updateHash = true } = {}) {
+  if (index < 0 || index >= total) return;
+  slides[current].classList.remove('active');
+  slides[current].classList.toggle('prev', index > current);
+  current = index;
+  slides[current].classList.add('active');
+  slides[current].classList.remove('prev');
+  counter.textContent = `${pad(current + 1)} / ${pad(total)}`;
+  progress.style.width = `${((current + 1) / total) * 100}%`;
+  if (updateHash) {
+    history.replaceState(null, '', `#${current + 1}`);
+  }
+}
+
+function slideFromHash() {
+  const n = parseInt(location.hash.slice(1), 10);
+  if (!Number.isNaN(n) && n >= 1 && n <= total) return n - 1;
+  return 0;
+}
+
+function next() { if (current < total - 1) show(current + 1); }
+function prev() { if (current > 0) show(current - 1); }
+
+document.addEventListener('keydown', (e) => {
+  switch (e.key) {
+    case 'ArrowRight':
+    case 'PageDown':
+    case ' ':
+    case 'Enter':
+      e.preventDefault(); next(); break;
+    case 'ArrowLeft':
+    case 'PageUp':
+    case 'Backspace':
+      e.preventDefault(); prev(); break;
+    case 'Home':
+      e.preventDefault(); show(0); break;
+    case 'End':
+      e.preventDefault(); show(total - 1); break;
+    case 'f':
+    case 'F':
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+      break;
+  }
+});
+
+document.addEventListener('click', (e) => {
+  if (e.target.closest('a, button')) return;
+  next();
+});
+
+document.addEventListener('contextmenu', (e) => {
+  e.preventDefault(); prev();
+});
+
+window.addEventListener('hashchange', () => {
+  const target = slideFromHash();
+  if (target !== current) show(target, { updateHash: false });
+});
+
+const initial = slideFromHash();
+if (initial !== 0) {
+  slides[0].classList.remove('active');
+  slides[initial].classList.add('active');
+  current = initial;
+}
+counter.textContent = `${pad(current + 1)} / ${pad(total)}`;
+progress.style.width = `${((current + 1) / total) * 100}%`;
+if (!location.hash) history.replaceState(null, '', `#${current + 1}`);
+</script>
+</body>
+</html>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Coach Day — Case Cards</title>
+<style>
+:root {
+  --ink: #1a1a1a;
+  --ink-soft: #555;
+  --ink-mute: #888;
+  --accent: #C4452A;
+  --rule: #c8c3b8;
+  --cream: #FAF6EF;
+  --gold: #B8893B;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  font-family: 'Inter', -apple-system, Helvetica, Arial, sans-serif;
+  color: var(--ink);
+  background: #eee;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  width: 210mm;
+  height: 297mm;
+  background: white;
+  padding: 15mm 16mm 12mm;
+  margin: 20px auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  position: relative;
+  page-break-after: always;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 3mm;
+  margin-bottom: 6mm;
+  font-size: 8pt;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+.header .case-tag {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Case title block */
+.case-head {
+  display: grid;
+  grid-template-columns: 55mm 1fr;
+  gap: 8mm;
+  align-items: start;
+  margin-bottom: 8mm;
+}
+.case-letter {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 130pt;
+  line-height: 0.85;
+  color: var(--accent);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+}
+.case-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 28pt;
+  line-height: 1.05;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin-top: 4mm;
+}
+.case-title em { color: var(--accent); font-style: italic; font-weight: 400; }
+
+/* Story */
+.story {
+  margin-bottom: 6mm;
+}
+.story-label {
+  font-size: 8pt;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+  margin-bottom: 3mm;
+}
+.beats {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3mm;
+}
+.beats li {
+  font-size: 11pt;
+  line-height: 1.45;
+  color: var(--ink);
+  padding-left: 6mm;
+  position: relative;
+}
+.beats li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 2.8mm;
+  width: 3mm;
+  height: 0.8mm;
+  background: var(--accent);
+}
+.beats li em { font-style: italic; color: var(--ink); }
+
+.quote {
+  font-family: 'Fraunces', Georgia, serif;
+  font-style: italic;
+  font-size: 14pt;
+  line-height: 1.35;
+  color: var(--ink);
+  border-left: 3px solid var(--accent);
+  padding-left: 6mm;
+  margin: 5mm 0;
+}
+
+/* Prompts section */
+.prompts-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+  padding-top: 6mm;
+  border-top: 1px solid var(--rule);
+}
+.prompts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4mm;
+}
+.prompts-title {
+  font-family: 'Fraunces', serif;
+  font-size: 16pt;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.prompts-title em { color: var(--accent); font-style: italic; }
+.prompts-sub {
+  font-size: 8pt;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+}
+.prompt-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4mm 8mm;
+}
+.prompt-list li {
+  font-size: 10pt;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  padding-left: 5mm;
+  position: relative;
+}
+.prompt-list li::before {
+  content: '?';
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  color: var(--accent);
+  font-size: 11pt;
+  font-weight: 500;
+}
+
+/* Themes */
+.themes {
+  margin-top: 5mm;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2mm;
+}
+.theme-tag {
+  font-size: 8pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 1.5mm 3mm;
+  border: 1px solid var(--rule);
+  border-radius: 20pt;
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+
+/* Footer */
+.footer {
+  margin-top: 5mm;
+  display: flex;
+  justify-content: space-between;
+  font-size: 7pt;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+/* Controls */
+.controls {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: white;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  z-index: 100;
+}
+.controls button {
+  padding: 6px 12px;
+  border: 1px solid var(--ink);
+  background: white;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+}
+.controls button:hover { background: var(--ink); color: white; }
+
+@media print {
+  body { background: white; }
+  .page { margin: 0; box-shadow: none; }
+  .controls { display: none; }
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="controls">
+  <button onclick="window.print()">Print</button>
+</div>
+
+<!-- CASE A -->
+<div class="page">
+  <div class="header">
+    <span class="case-tag">Case A</span>
+    <span>Coach Day · AI — Expectations vs. Reality</span>
+  </div>
+  <div class="case-head">
+    <div class="case-letter">A</div>
+    <div>
+      <div class="case-title">The senior who became a <em>proofreader</em>.</div>
+    </div>
+  </div>
+  <div class="story">
+    <div class="story-label">The situation</div>
+    <ul class="beats">
+      <li>A senior developer stopped writing code.</li>
+      <li>Their days are spent reviewing AI-generated PRs — often 100+ files each.</li>
+      <li>A mid-level on the same team is thriving — shipping fast, running agents.</li>
+      <li>The senior is quietly updating their CV.</li>
+    </ul>
+    <div class="quote">"I used to build things. Now I check if a machine built them correctly. I could be anyone."</div>
+  </div>
+
+  <div class="prompts-section">
+    <div class="prompts-header">
+      <div class="prompts-title">Prompts to <em>think with</em></div>
+      <div class="prompts-sub">Use during Task 1 &amp; Task 2</div>
+    </div>
+    <ul class="prompt-list">
+      <li>What did the senior used to get from their work that they're not getting now?</li>
+      <li>Is the mid-level thriving because of skill, temperament, or career stage?</li>
+      <li>Who else on the team might be quietly feeling what the senior feels?</li>
+      <li>If you split review work evenly, does the problem get smaller — or just more distributed?</li>
+      <li>What would the senior need to hear from you to not send that CV out?</li>
+      <li>What's the team losing that nobody has named out loud yet?</li>
+    </ul>
+    <div class="themes">
+      <span class="theme-tag">Review overload</span>
+      <span class="theme-tag">Motivation</span>
+      <span class="theme-tag">Team asymmetry</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Case A · Coach Day · 2026</span>
+    <span>Visma Tech Lithuania</span>
+  </div>
+</div>
+
+<!-- CASE B -->
+<div class="page">
+  <div class="header">
+    <span class="case-tag">Case B</span>
+    <span>Coach Day · AI — Expectations vs. Reality</span>
+  </div>
+  <div class="case-head">
+    <div class="case-letter">B</div>
+    <div>
+      <div class="case-title">The PO who became a <em>developer</em>.</div>
+    </div>
+  </div>
+  <div class="story">
+    <div class="story-label">The situation</div>
+    <ul class="beats">
+      <li>The Product Owner built a working prototype over the weekend with AI.</li>
+      <li>Monday: 2,000 lines of generated code, submitted as a PR to the main repo. "Just review and merge it — it works."</li>
+      <li>The tech lead pushed back on architecture and security.</li>
+      <li>The PO escalated to their manager. Both sides are looking at you.</li>
+    </ul>
+    <div class="quote">"The development team is blocking innovation and slowing us down."</div>
+  </div>
+
+  <div class="prompts-section">
+    <div class="prompts-header">
+      <div class="prompts-title">Prompts to <em>think with</em></div>
+      <div class="prompts-sub">Use during Task 1 &amp; Task 2</div>
+    </div>
+    <ul class="prompt-list">
+      <li>What did the PO actually see in their weekend work that made them think they'd "solved" dev work?</li>
+      <li>Where did the PO's ownership end before AI — where does it end now?</li>
+      <li>Is there a version where the prototype was genuinely useful as a starting point?</li>
+      <li>What does the tech lead need to push back without looking obstructionist?</li>
+      <li>If you took the PO's side, what would that do to the tech lead's authority next time?</li>
+      <li>Who decides where the line is — and have they ever written it down?</li>
+    </ul>
+    <div class="themes">
+      <span class="theme-tag">Role boundaries</span>
+      <span class="theme-tag">Architecture bypass</span>
+      <span class="theme-tag">Power dynamics</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Case B · Coach Day · 2026</span>
+    <span>Visma Tech Lithuania</span>
+  </div>
+</div>
+
+<!-- CASE C -->
+<div class="page">
+  <div class="header">
+    <span class="case-tag">Case C</span>
+    <span>Coach Day · AI — Expectations vs. Reality</span>
+  </div>
+  <div class="case-head">
+    <div class="case-letter">C</div>
+    <div>
+      <div class="case-title">The team that ran out of <em>work</em>.</div>
+    </div>
+  </div>
+  <div class="story">
+    <div class="story-label">The situation</div>
+    <ul class="beats">
+      <li>Throughput tripled. A 6-month backlog is nearly empty at month 2.</li>
+      <li>The partner is delighted but hasn't prepared more requirements.</li>
+      <li>Two people asked you privately: <em>"Will they still need all of us?"</em> You don't have an honest answer.</li>
+      <li>A third stopped using AI entirely — "why would I help make myself redundant faster?"</li>
+    </ul>
+  </div>
+
+  <div class="prompts-section">
+    <div class="prompts-header">
+      <div class="prompts-title">Prompts to <em>think with</em></div>
+      <div class="prompts-sub">Use during Task 1 &amp; Task 2</div>
+    </div>
+    <ul class="prompt-list">
+      <li>Who should you talk to first — the two who asked, or the one who stopped using AI?</li>
+      <li>What does the partner's planning process need to change for this not to repeat?</li>
+      <li>What's the honest version of the answer the two are asking for?</li>
+      <li>If throughput dropped back tomorrow, would anyone feel safer? Why or why not?</li>
+      <li>Who inside Visma needs to hear that "too fast" is a real problem?</li>
+      <li>What would you have to commit to publicly for the AI-refuser to trust the team's direction?</li>
+    </ul>
+    <div class="themes">
+      <span class="theme-tag">Bottleneck shift</span>
+      <span class="theme-tag">Existential fear</span>
+      <span class="theme-tag">Self-sabotage</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Case C · Coach Day · 2026</span>
+    <span>Visma Tech Lithuania</span>
+  </div>
+</div>
+
+<!-- CASE D -->
+<div class="page">
+  <div class="header">
+    <span class="case-tag">Case D</span>
+    <span>Coach Day · AI — Expectations vs. Reality</span>
+  </div>
+  <div class="case-head">
+    <div class="case-letter">D</div>
+    <div>
+      <div class="case-title">The <em>silent</em> room.</div>
+    </div>
+  </div>
+  <div class="story">
+    <div class="story-label">The situation</div>
+    <ul class="beats">
+      <li>In a retrospective, a developer says what many have been thinking: nobody has explained <em>why</em> the team is being pushed to adopt AI.</li>
+      <li>They ask directly: is this about impressing Visma? About headcount? They say they'd respect any honest answer.</li>
+      <li>The room goes silent. Everyone turns to you.</li>
+      <li>You can't pass this up the chain in the moment. You also don't actually know the real "why" yourself.</li>
+    </ul>
+    <div class="quote">"I'd respect any answer — I just want the real one."</div>
+  </div>
+
+  <div class="prompts-section">
+    <div class="prompts-header">
+      <div class="prompts-title">Prompts to <em>think with</em></div>
+      <div class="prompts-sub">Use during Task 1 &amp; Task 2</div>
+    </div>
+    <ul class="prompt-list">
+      <li>What honest answer could you give in the moment that isn't a lie but isn't the full truth either?</li>
+      <li>What would change if you said: "I don't know — let's find out together"?</li>
+      <li>Who in leadership actually knows the real "why"?</li>
+      <li>Which of your own fears are you protecting by not asking leadership this?</li>
+      <li>What's the cost of silence here — to this developer, and to everyone watching?</li>
+      <li>If leadership won't give a "why", what smaller "why" can you construct from what you do know?</li>
+    </ul>
+    <div class="themes">
+      <span class="theme-tag">Missing "why"</span>
+      <span class="theme-tag">Leadership gap</span>
+      <span class="theme-tag">Coach's uncertainty</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Case D · Coach Day · 2026</span>
+    <span>Visma Tech Lithuania</span>
+  </div>
+</div>
+
+<!-- CASE E -->
+<div class="page">
+  <div class="header">
+    <span class="case-tag">Case E</span>
+    <span>Coach Day · AI — Expectations vs. Reality</span>
+  </div>
+  <div class="case-head">
+    <div class="case-letter">E</div>
+    <div>
+      <div class="case-title">The bug that <em>slipped through</em>.</div>
+    </div>
+  </div>
+  <div class="story">
+    <div class="story-label">The situation</div>
+    <ul class="beats">
+      <li>Dev throughput doubled. QA capacity didn't.</li>
+      <li>A client found a security vulnerability in AI-generated code that passed review.</li>
+      <li>The reviewer admitted they didn't fully understand that section — but "it looked clean."</li>
+      <li>Team lead wants to slow down. The partner wants to speed up. Trust is shaken on both sides.</li>
+    </ul>
+    <div class="quote">"We're not actually going faster. We're finding out about problems later."</div>
+  </div>
+
+  <div class="prompts-section">
+    <div class="prompts-header">
+      <div class="prompts-title">Prompts to <em>think with</em></div>
+      <div class="prompts-sub">Use during Task 1 &amp; Task 2</div>
+    </div>
+    <ul class="prompt-list">
+      <li>What did the reviewer actually believe when they said "it looked clean"?</li>
+      <li>How do you build review culture where "I don't fully understand this" is safe to say?</li>
+      <li>What's the cost of slowing down — vs. the cost of this happening again?</li>
+      <li>Who outside the team (client, partner, security) needs to be part of the fix?</li>
+      <li>Is the partner's "speed up" a demand, or a hope — and does that change your answer?</li>
+      <li>What would it take for the reviewer to come to you <em>before</em> the next one slips?</li>
+    </ul>
+    <div class="themes">
+      <span class="theme-tag">Quality vs speed</span>
+      <span class="theme-tag">False confidence</span>
+      <span class="theme-tag">Trust erosion</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Case E · Coach Day · 2026</span>
+    <span>Visma Tech Lithuania</span>
+  </div>
+</div>
+
+<!-- CASE F -->
+<div class="page">
+  <div class="header">
+    <span class="case-tag">Case F</span>
+    <span>Coach Day · AI — Expectations vs. Reality</span>
+  </div>
+  <div class="case-head">
+    <div class="case-letter">F</div>
+    <div>
+      <div class="case-title">The success stories that <em>won't stop</em>.</div>
+    </div>
+  </div>
+  <div class="story">
+    <div class="story-label">The situation</div>
+    <ul class="beats">
+      <li>Your team is doing fine. Delivery is steady, quality is holding, people are learning AI tools at a healthy pace.</li>
+      <li>But managers — yours and the partner's — keep hearing polished AI success stories: internal demos, LinkedIn posts, "team X shipped in a weekend."</li>
+      <li>Every week you get the same question, in new words: <em>"Why aren't we building like that?"</em></li>
+      <li>You know most of those stories are survivorship-biased, cherry-picked, or quietly unfinished — but that's a hard argument to win against a highlight reel.</li>
+      <li>Your team is feeling the pressure. Some are cutting corners to "look faster." Others are disengaging.</li>
+    </ul>
+  </div>
+
+  <div class="prompts-section">
+    <div class="prompts-header">
+      <div class="prompts-title">Prompts to <em>think with</em></div>
+      <div class="prompts-sub">Use during Task 1 &amp; Task 2</div>
+    </div>
+    <ul class="prompt-list">
+      <li>Which of the success stories have you actually verified? Which are highlight reels?</li>
+      <li>What's the cost of "looking faster" vs. being healthy — can you name it in numbers?</li>
+      <li>What would you need to show your manager to shift the conversation from "why not us" to "what's actually working"?</li>
+      <li>Is there a part of you also quietly believing the highlight reel?</li>
+      <li>What genuine AI wins from your team are going unnoticed because they don't look dramatic?</li>
+      <li>Who else in the company is caught in the same pressure — and could you compare notes?</li>
+    </ul>
+    <div class="themes">
+      <span class="theme-tag">Benchmark pressure</span>
+      <span class="theme-tag">Survivorship bias</span>
+      <span class="theme-tag">Protecting the team</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Case F · Coach Day · 2026</span>
+    <span>Visma Tech Lithuania</span>
+  </div>
+</div>
+
+</body>
+</html>
