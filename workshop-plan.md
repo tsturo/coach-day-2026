@@ -144,13 +144,12 @@ What changes — in behavior, in structure, and in the actual words you'd say on
 ## Phase 4: Presentations + back to green (50 min total)
 
 ### Task
-One representative per group presents — NOT a full walkthrough. Each group shares only:
+One representative per group presents. Two things only:
 
-1. **The core** (one sentence) — What is the person in this case actually afraid of losing?
-2. **Start — read the actual words aloud** — The opening of the conversation you'd have on Monday.
-3. **One Escalate item** — With a name and a date.
+1. **From Task 01 — the core, in one sentence.** What is the person in this case actually afraid of losing?
+2. **From Task 02 — Stop. Start. Escalate.** All three, briefly: what you're stopping, the new action points (including reading the actual conversation opening out loud), and one Escalate item with a name and a date.
 
-Task 1 (layers) and the Stop items stay on the worksheet. They were work done *for the group*, not the room. If others want to dig in, they can during discussion.
+The Surface and Underneath layers from Task 1 stay on the worksheet. They were work done *for the group*, not the room. If others want to dig in, they can during discussion.
 
 ### Format
 - Worksheet visible (wall or screen)
