@@ -96,7 +96,7 @@ In a retrospective, a developer says out loud what many have been thinking: nobo
 
 **Case E — The bug that slipped through**
 
-Dev throughput doubled with AI, but your QA capacity didn't change. A client found a security vulnerability in AI-generated code that passed code review — the reviewer later admitted they didn't fully understand that section but "it looked clean." Trust is shaken — with the client and within the team. The team lead wants to slow down. The partner wants to speed up. A developer says: "We're not actually going faster. We're just finding out about problems later."
+Dev throughput doubled with AI, but your QA capacity didn't change. A security vulnerability was caught by the Bug Bounty program in AI-generated code that passed code review — the reviewer later admitted they didn't fully understand that section but "it looked clean." Trust is shaken — with external stakeholders and within the team. The team lead wants to slow down. The partner wants to speed up. A developer says: "We're not actually going faster. We're just finding out about problems later."
 
 **Case F — The success stories that won't stop**
 
